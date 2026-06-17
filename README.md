@@ -22,9 +22,6 @@ Também é importante distinguir:
 
 Esta documentação foi dividida em páginas independentes. Use o sumário abaixo ou os links **Anterior**, **Início** e **Próxima** existentes no topo e no final de cada capítulo.
 
-- [Abrir o sumário para leitores compatíveis com mdBook](SUMMARY.md)
-- [Ler o documento completo em uma única página](documentacao-completa.md)
-
 ## Sumário
 
 1. [Princípios arquiteturais](paginas/01-principios-arquiteturais.md)
