@@ -2,6 +2,8 @@
 
 # 14. Segurança
 
+Segurança em pagamentos precisa cobrir identidade, autorização, criptografia, fraude, privacidade, trilha de auditoria e resposta a incidente.
+
 ## 14.1 Controles principais
 
 - autenticação forte;
@@ -15,6 +17,16 @@
 - trilha de auditoria;
 - segregação de funções;
 - princípio do menor privilégio.
+
+Também considere:
+
+- validação de dispositivo e sessão quando aplicável;
+- análise de risco transacional;
+- detecção de comportamento anômalo;
+- proteção de dados pessoais em logs, eventos e analytics;
+- revisão periódica de permissões;
+- segregação entre ambientes;
+- resposta a incidentes de segurança.
 
 ## 14.2 Certificados, TLS e mTLS
 
@@ -35,6 +47,8 @@ A operação deve prever:
 - revogação;
 - certificados de contingência;
 - testes de rotação.
+
+Certificado expirado é incidente previsível. A documentação operacional deve incluir dono, data de expiração, janela de renovação, processo de troca, rollback e alerta antecipado.
 
 ## 14.3 HSM
 
@@ -57,7 +71,30 @@ Usos comuns:
 - criptografia;
 - atendimento a requisitos de segurança e auditoria.
 
----
+## 14.4 Proteção contra replay
+
+Um atacante não deve conseguir capturar uma requisição válida e reenviá-la depois.
+
+Controles comuns:
+
+- nonce;
+- timestamp com janela curta;
+- assinatura incluindo corpo, caminho e timestamp;
+- chave de idempotência;
+- validação de certificado ou credencial;
+- armazenamento temporário de identificadores já vistos.
+
+## 14.5 Dados sensíveis
+
+Não registre em log mais dados do que o necessário. Para observabilidade, prefira identificadores técnicos e mascaramento.
+
+Exemplos de cuidado:
+
+- não vazar documento, chave Pix, token, segredo ou payload completo sem necessidade;
+- controlar acesso a trilhas de auditoria;
+- definir retenção;
+- proteger dados em ambientes de teste;
+- evitar dados pessoais em labels de métricas de alta cardinalidade.
 
 ---
 

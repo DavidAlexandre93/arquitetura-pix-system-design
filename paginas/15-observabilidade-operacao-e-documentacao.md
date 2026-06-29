@@ -2,6 +2,8 @@
 
 # 15. Observabilidade, operação e documentação
 
+Um sistema financeiro não termina quando o endpoint responde. Ele precisa ser observado, operado, auditado e melhorado continuamente.
+
 ## 15.1 Logs, métricas e traces
 
 ### Logs
@@ -50,6 +52,16 @@ Adapter externo
 
 Propague `traceId`, `correlationId`, `paymentId` e identificadores de negócio sem transformar dados sensíveis em tags de alta cardinalidade indiscriminadamente.
 
+Uma boa investigação deve conseguir responder:
+
+- qual requisição iniciou a operação;
+- qual usuário, cliente ou credencial estava envolvido;
+- qual estado foi persistido;
+- qual chamada externa foi feita;
+- se houve retry;
+- se evento foi publicado;
+- se a conciliação confirmou ou apontou divergência.
+
 ## 15.2 SLI, SLO e SLA
 
 - **SLI**: indicador medido, como taxa de sucesso ou latência p99;
@@ -64,6 +76,19 @@ SLO: 99,95% por mês
 SLA: compromisso contratual de 99,9%
 ```
 
+SLIs úteis para Pix:
+
+- taxa de sucesso por tipo de operação;
+- latência p95/p99 por endpoint;
+- tempo em `PROCESSING`;
+- quantidade e idade de pagamentos `UNKNOWN`;
+- atraso de publicação da Outbox;
+- consumer lag;
+- idade máxima de mensagem em DLQ;
+- divergências abertas na conciliação.
+
+Alertas devem ter ação clara. Alerta sem runbook vira ruído.
+
 ## 15.3 Runbook
 
 Documento operacional usado durante incidentes ou tarefas recorrentes:
@@ -75,6 +100,20 @@ Documento operacional usado durante incidentes ou tarefas recorrentes:
 - critérios de escalonamento;
 - validação da recuperação;
 - rollback ou contingência.
+
+Modelo simples:
+
+```text
+Sintoma:
+Impacto:
+Métricas e dashboards:
+Hipóteses prováveis:
+Passos de diagnóstico:
+Mitigação segura:
+Critério de escalonamento:
+Critério de recuperação:
+Comunicação:
+```
 
 ## 15.4 Postmortem
 
@@ -89,6 +128,14 @@ Documento produzido após um incidente:
 - ações corretivas com responsáveis e prazos.
 
 Deve ser **blameless**: analisa condições do sistema e do processo, não procura um culpado individual.
+
+Boas ações corretivas são específicas:
+
+- o que será feito;
+- por quem;
+- até quando;
+- como será validado;
+- qual risco será reduzido.
 
 ## 15.5 ADR
 
@@ -107,6 +154,18 @@ Exemplo:
 ADR-007 — Adotar Transactional Outbox para eventos de pagamento
 ```
 
+Modelo enxuto:
+
+```text
+Título:
+Status:
+Contexto:
+Decisão:
+Alternativas consideradas:
+Consequências:
+Data:
+```
+
 ## 15.6 C4 Model
 
 Níveis:
@@ -117,6 +176,8 @@ Níveis:
 4. **Code**: classes ou detalhes de implementação, quando necessário.
 
 No C4, “container” não significa apenas Docker; é uma unidade executável ou armazenadora relevante para a arquitetura.
+
+Para esta documentação, os níveis mais úteis são Context e Container. Component pode ser usado para detalhar o orquestrador de pagamentos, ledger, adapter, outbox relay e conciliação.
 
 ## 15.7 OKR
 
@@ -157,7 +218,18 @@ Postmortem
 → gera aprendizado após incidentes.
 ```
 
----
+## 15.9 Documentação mínima de produção
+
+- visão C4 de contexto e containers;
+- contratos de API e webhooks;
+- estados e transições;
+- políticas de idempotência;
+- decisão de consistência por dado;
+- runbooks dos fluxos críticos;
+- ADRs das decisões relevantes;
+- checklist de segurança e operação;
+- procedimento de conciliação;
+- plano de testes de recuperação.
 
 ---
 

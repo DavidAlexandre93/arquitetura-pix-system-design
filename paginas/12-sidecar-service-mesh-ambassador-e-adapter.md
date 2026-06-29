@@ -2,6 +2,8 @@
 
 # 12. Sidecar, service mesh, Ambassador e Adapter
 
+Este capítulo diferencia padrões que costumam ser confundidos. Sidecar e service mesh são mais ligados à implantação e comunicação. Ambassador é um proxy auxiliar. Adapter é um padrão de integração entre contratos.
+
 ## 12.1 Sidecar
 
 Sidecar é um componente executado ao lado da aplicação e com ciclo de vida relacionado.
@@ -22,6 +24,8 @@ Usos:
 - telemetria.
 
 É um padrão de implantação, não uma solução específica.
+
+Use com parcimônia. Cada sidecar adiciona consumo de CPU, memória, configuração, logs, métricas e superfície de falha.
 
 ## 12.2 Service mesh
 
@@ -59,6 +63,8 @@ Formulação correta:
 
 Nem todo service mesh atual exige sidecar por pod. Modelos ambient podem usar proxies por nó e waypoints.
 
+Service mesh faz sentido quando a organização precisa de políticas consistentes de tráfego, mTLS, observabilidade e segurança entre muitos serviços. Pode ser excesso para poucos serviços ou para um time que ainda não consegue operar bem a complexidade básica.
+
 ## 12.3 Ambassador Pattern
 
 Ambassador é um proxy auxiliar colocado próximo ao cliente para realizar chamadas de rede em nome da aplicação.
@@ -82,6 +88,8 @@ Pode encapsular:
 
 É comum em comunicação **de saída**, mas não é obrigatório para todo egress. Um egress gateway do service mesh também pode centralizar políticas de saída.
 
+Exemplo em uma plataforma Pix: encapsular conexão mTLS, retry seguro, deadline e métricas para um provedor externo, sem espalhar detalhes de rede pelo domínio financeiro.
+
 ## 12.4 Adapter Pattern
 
 Adapter é um padrão de código ou componente que converte uma interface para o contrato esperado pelo domínio.
@@ -104,6 +112,13 @@ Pode converter:
 
 Webhook e WebSocket não são, por si só, Adapter Pattern. Um adapter pode ser usado para receber ou enviar esses protocolos e convertê-los para eventos/comandos internos.
 
+O adapter deve proteger o domínio contra mudanças do provedor:
+
+- status externo vira enum interno controlado;
+- erro externo vira erro de domínio;
+- payload externo vira comando ou evento interno;
+- diferenças de contrato ficam isoladas em uma fronteira testável.
+
 ## 12.5 Entrada e saída da aplicação
 
 ```text
@@ -114,7 +129,9 @@ Saída externa:
 domínio → Provider Adapter → Ambassador/Egress opcional → PSP
 ```
 
----
+## 12.6 Pergunta prática
+
+Se a mudança é de contrato de negócio, provavelmente é Adapter. Se a mudança é de transporte, segurança de conexão, telemetria ou política de tráfego, provavelmente é Ambassador, gateway, ingress, egress ou service mesh.
 
 ---
 

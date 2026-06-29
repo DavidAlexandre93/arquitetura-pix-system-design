@@ -2,6 +2,8 @@
 
 # 9. CQRS, Saga e Event Sourcing
 
+Estes padrões são úteis, mas frequentemente usados cedo demais. Em pagamentos, adote quando o problema justificar a complexidade.
+
 ## 9.1 CQRS
 
 CQRS separa o modelo de comandos do modelo de consultas.
@@ -33,6 +35,19 @@ Estratégia recomendada:
 
 Transações distribuídas, como 2PC/XA, podem fornecer coordenação mais forte entre recursos, mas aumentam acoplamento, latência e riscos operacionais. Em microsserviços, são usadas com cautela.
 
+Use CQRS quando:
+
+- o modelo de escrita é diferente do modelo de leitura;
+- consultas precisam de projeções otimizadas;
+- dashboards e extratos derivados têm volume alto;
+- você aceita ou controla atraso de projeção.
+
+Evite CQRS quando:
+
+- o domínio ainda é simples;
+- a equipe não consegue operar projeções atrasadas;
+- a leitura derivada seria usada incorretamente para autorizar dinheiro.
+
 ## 9.2 Saga
 
 Saga coordena uma operação distribuída como uma sequência de transações locais.
@@ -59,6 +74,17 @@ PAYMENT_SENT
 Após o ponto irreversível, como a liquidação, não existe rollback técnico da mesma transferência. Uma devolução é uma nova operação financeira, com identidade, autorização e lançamentos próprios.
 
 Saga oferece consistência eventual por compensação; não é strong consistency global.
+
+Ao desenhar uma Saga, documente:
+
+- ponto de início;
+- passos locais;
+- eventos esperados;
+- timeouts;
+- compensações possíveis;
+- ponto de irreversibilidade;
+- como lidar com estados pendentes;
+- quem opera casos que exigem intervenção.
 
 ## 9.3 Event Sourcing
 
@@ -103,7 +129,24 @@ handler de integração
 
 Event Sourcing não é apenas uma tabela de auditoria. Nele, o stream de eventos é a fonte autoritativa do agregado.
 
----
+Use Event Sourcing quando o histórico de mudanças é parte central do domínio e a equipe está preparada para versionamento, replay e operação das projeções.
+
+Evite quando a motivação é apenas "ter auditoria". Auditoria pode ser atendida com ledger, trilhas de evento e logs imutáveis sem transformar todo o modelo de domínio em Event Sourcing.
+
+## 9.4 Relação entre os padrões
+
+```text
+CQRS
+→ separa comandos e consultas.
+
+Saga
+→ coordena transações locais em fluxo distribuído.
+
+Event Sourcing
+→ usa eventos como fonte de verdade do agregado.
+```
+
+Eles podem coexistir, mas nenhum exige automaticamente o outro.
 
 ---
 

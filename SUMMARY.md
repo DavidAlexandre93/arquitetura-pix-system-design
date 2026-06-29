@@ -1,6 +1,7 @@
 # Sumário
 
 - [Início](README.md)
+- [0. Como estudar esta documentação](paginas/00-como-estudar-esta-documentacao.md)
 - [1. Princípios arquiteturais](paginas/01-principios-arquiteturais.md)
 - [2. Componentes do ecossistema Pix](paginas/02-componentes-do-ecossistema-pix.md)
 - [3. Arquitetura de referência](paginas/03-arquitetura-de-referencia.md)
@@ -20,5 +21,6 @@
 - [17. Resumo para entrevista](paginas/17-resumo-para-entrevista.md)
 - [18. Checklist técnico](paginas/18-checklist-tecnico.md)
 - [19. Referências oficiais e técnicas](paginas/19-referencias-oficiais-e-tecnicas.md)
+- [20. Glossário e perguntas de revisão](paginas/20-glossario-e-perguntas-de-revisao.md)
 
 - [Documento completo](documentacao-completa.md)

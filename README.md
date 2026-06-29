@@ -1,10 +1,10 @@
 # Arquitetura de Sistemas de Pagamento com Pix
 
-> Documentação navegável em Markdown para estudo, entrevistas técnicas e discussões de arquitetura.
+> Guia navegável em Markdown para estudar, projetar e discutir uma plataforma de pagamentos com Pix com foco em consistência financeira, resiliência, segurança e operação.
 
 ## Escopo e premissas
 
-Este documento descreve uma **arquitetura de referência** para uma plataforma que oferece pagamentos via Pix, como um banco, instituição de pagamento, fintech ou plataforma integradora.
+Esta documentação descreve uma **arquitetura de referência** para uma plataforma que oferece pagamentos via Pix, como um banco, instituição de pagamento, fintech ou plataforma integradora.
 
 Nem todos os componentes descritos são obrigatórios pelo Banco Central. Elementos como Kafka, CQRS, Saga, Event Sourcing, Redis, gRPC e service mesh são **decisões internas de arquitetura**. Já DICT, SPI, MED e requisitos de segurança fazem parte do ecossistema e da regulamentação do Pix.
 
@@ -16,6 +16,17 @@ Também é importante distinguir:
 - **API da plataforma**: interface criada pela instituição para aplicativos, clientes ou parceiros;
 - **arquitetura interna**: serviços, bancos, filas, streams e padrões usados pela instituição.
 
+O objetivo não é apresentar uma implementação única. O objetivo é ensinar como pensar: onde exigir consistência forte, onde aceitar consistência eventual, como evitar duplicidade financeira, como lidar com timeouts, como publicar eventos sem dual write e como operar o sistema depois que ele está em produção.
+
+## Público-alvo
+
+Este material foi organizado para:
+
+- pessoas estudando arquitetura de sistemas financeiros;
+- engenheiros preparando entrevistas técnicas ou design reviews;
+- times que precisam discutir uma plataforma Pix de forma estruturada;
+- leitores que querem entender a diferença entre regras do ecossistema Pix e escolhas internas de engenharia.
+
 ---
 
 ## Como navegar
@@ -24,9 +35,19 @@ Esta documentação foi dividida em páginas independentes. Use o sumário abaix
 
 - [Abrir o sumário para leitores compatíveis com mdBook](SUMMARY.md)
 - [Ler o documento completo em uma única página](documentacao-completa.md)
+- [Abrir o mapa de navegação compacto](NAVEGACAO.md)
+
+Leitura recomendada:
+
+1. Comece pelo roteiro de estudo.
+2. Leia os capítulos 1 a 5 para fixar os fundamentos financeiros.
+3. Leia os capítulos 6 a 13 para entender integração, mensageria e comunicação.
+4. Leia os capítulos 14 a 18 para fechar segurança, operação, conciliação e revisão.
+5. Use o glossário e as perguntas finais para revisar.
 
 ## Sumário
 
+0. [Como estudar esta documentação](paginas/00-como-estudar-esta-documentacao.md)
 1. [Princípios arquiteturais](paginas/01-principios-arquiteturais.md)
 2. [Componentes do ecossistema Pix](paginas/02-componentes-do-ecossistema-pix.md)
 3. [Arquitetura de referência](paginas/03-arquitetura-de-referencia.md)
@@ -46,6 +67,7 @@ Esta documentação foi dividida em páginas independentes. Use o sumário abaix
 17. [Resumo para entrevista](paginas/17-resumo-para-entrevista.md)
 18. [Checklist técnico](paginas/18-checklist-tecnico.md)
 19. [Referências oficiais e técnicas](paginas/19-referencias-oficiais-e-tecnicas.md)
+20. [Glossário e perguntas de revisão](paginas/20-glossario-e-perguntas-de-revisao.md)
 
 ---
 
@@ -57,6 +79,7 @@ documentacao-pix-markdown/
 ├── SUMMARY.md
 ├── documentacao-completa.md
 └── paginas/
+    ├── 00-como-estudar-esta-documentacao.md
     ├── 01-principios-arquiteturais.md
     ├── 02-componentes-do-ecossistema-pix.md
     └── ...

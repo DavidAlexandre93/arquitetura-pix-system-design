@@ -2,6 +2,8 @@
 
 # 5. Idempotência
 
+Idempotência é uma das proteções mais importantes em pagamentos. Ela permite repetir uma intenção sem repetir o efeito financeiro.
+
 ## 5.1 Onde validar
 
 A idempotência deve existir em várias camadas:
@@ -14,6 +16,8 @@ A idempotência deve existir em várias camadas:
 6. **integrações externas**: usa identificadores estáveis e consulta de status quando necessário.
 
 > `@Transactional` sozinho não garante idempotência. Duas instâncias podem executar a mesma lógica concorrentemente. A garantia final de exclusão deve estar em uma operação atômica, normalmente uma `UNIQUE CONSTRAINT` ou atualização condicional no banco.
+
+Idempotência deve ser pensada por escopo. Uma mesma chave pode ser única por cliente, por conta, por endpoint, por operação ou por parceiro. O escopo precisa ser documentado, porque uma chave global demais causa colisões desnecessárias e uma chave ampla de menos permite duplicidade.
 
 ## 5.2 API HTTP
 
@@ -31,6 +35,15 @@ Armazene pelo menos:
 - estado (`PROCESSING`, `COMPLETED`, `FAILED`);
 - resposta recuperável;
 - data de criação e expiração.
+
+Inclua também, quando aplicável:
+
+- versão do contrato;
+- endpoint ou tipo de operação;
+- código de erro recuperável;
+- usuário ou credencial que iniciou a chamada;
+- data da última leitura;
+- lock lógico ou estado `IN_PROGRESS`.
 
 Exemplo de constraint:
 
@@ -57,6 +70,15 @@ Comportamento recomendado:
 | mesma chave e payload diferente | retorna conflito |
 | operação ainda em andamento | retorna estado atual, sem reexecutar o efeito |
 
+Respostas HTTP típicas:
+
+| Situação | Status possível |
+|---|---|
+| operação criada | `201 Created` ou `202 Accepted` |
+| repetição com mesmo payload concluído | mesmo status e corpo recuperável da resposta original |
+| repetição enquanto processa | `202 Accepted` ou `409 Conflict`, conforme contrato |
+| mesma chave com payload diferente | `409 Conflict` |
+
 Evite o padrão vulnerável a corrida:
 
 ```java
@@ -66,6 +88,8 @@ if (!repository.existsById(key)) {
 ```
 
 Prefira tentar inserir e tratar a violação de unicidade.
+
+O hash do payload deve ser canônico. Campos em ordem diferente, espaços ou metadados irrelevantes não deveriam transformar a mesma intenção em outra operação, a menos que essa seja uma decisão explícita do contrato.
 
 ## 5.3 Consumer idempotente
 
@@ -93,11 +117,21 @@ COMMIT
 
 Se a regra falhar, o registro de deduplicação também deve sofrer rollback.
 
+Se o consumer chama outro serviço, a chamada externa também precisa de chave idempotente ou identificador de negócio estável. Caso contrário, o consumer local pode ser idempotente e ainda duplicar o efeito no sistema chamado.
+
 ## 5.4 Idempotência não significa exatamente uma entrega
 
 Idempotência significa que repetir a mesma intenção produz o mesmo efeito observável. Ela não impede necessariamente mensagens duplicadas; ela impede que duplicidades gerem efeitos financeiros duplicados.
 
----
+## 5.5 Erros comuns
+
+- usar `exists` seguido de `insert` sem proteção atômica;
+- criar idempotência apenas na API e esquecer consumers;
+- aceitar mesma chave com payload diferente;
+- expirar o registro cedo demais para o risco operacional;
+- não salvar resposta recuperável;
+- não distinguir falha definitiva de estado desconhecido;
+- repetir chamada externa sem identificador idempotente.
 
 ---
 

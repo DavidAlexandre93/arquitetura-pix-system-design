@@ -2,6 +2,8 @@
 
 # 10. Cache, rate limit e backpressure
 
+Este capítulo mostra como proteger latência e capacidade sem comprometer a fonte autoritativa do dinheiro.
+
 ## 10.1 TTL
 
 TTL (**Time To Live**) é o período durante o qual um item permanece válido no cache.
@@ -33,6 +35,22 @@ Para evitar cache stampede:
 - stale-while-revalidate;
 - atualização antecipada.
 
+Dados que costumam caber em cache:
+
+- configuração não crítica;
+- metadados de baixa volatilidade;
+- resultado de consulta pública com TTL curto;
+- projeções de leitura não autoritativas;
+- tokens e chaves públicas com política de rotação.
+
+Dados que exigem cuidado extremo:
+
+- saldo disponível para autorização;
+- limites transacionais ativos;
+- estado final de pagamento;
+- decisões de antifraude em tempo real;
+- dados pessoais sensíveis.
+
 ## 10.2 Rate limiting
 
 Rate limiting controla a quantidade de requisições por cliente, token, conta, IP ou operação.
@@ -48,6 +66,18 @@ Protege contra:
 - tráfego acidental;
 - consumo injusto de capacidade;
 - saturação de dependências.
+
+Dimensões comuns:
+
+- por credencial;
+- por cliente;
+- por conta;
+- por chave Pix;
+- por IP;
+- por endpoint;
+- por dependência externa.
+
+Algoritmos comuns incluem fixed window, sliding window, token bucket e leaky bucket. A escolha depende de previsibilidade, rajadas permitidas e custo de implementação.
 
 ## 10.3 Backpressure
 
@@ -74,7 +104,19 @@ Mecanismos possíveis:
 
 > Rate limiting pode fazer parte de uma estratégia de backpressure, mas os dois conceitos não são sinônimos.
 
----
+Backpressure precisa ser visível para produto e operação. Quando o sistema começa a degradar, ele deve preferir respostas controladas, filas limitadas e estados claros a aceitar trabalho infinito que nunca será processado.
+
+## 10.4 Degradação segura
+
+Em pagamentos, degradação segura significa preservar integridade antes de preservar conveniência.
+
+Exemplos:
+
+- bloquear temporariamente uma funcionalidade não essencial;
+- responder `202 Accepted` e acompanhar estado em vez de manter conexão aberta indefinidamente;
+- rejeitar novas solicitações quando a dependência crítica está saturada;
+- manter consulta e conciliação operando mesmo que notificações estejam atrasadas;
+- pausar redrive de DLQ durante incidente.
 
 ---
 

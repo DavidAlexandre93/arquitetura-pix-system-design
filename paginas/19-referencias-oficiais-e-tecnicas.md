@@ -1,6 +1,8 @@
-← [18. Checklist técnico](18-checklist-tecnico.md) · [Início](../README.md) · [Sumário](../SUMMARY.md)
+← [18. Checklist técnico](18-checklist-tecnico.md) · [Início](../README.md) · [Sumário](../SUMMARY.md) · [20. Glossário e perguntas de revisão](20-glossario-e-perguntas-de-revisao.md) →
 
 # 19. Referências oficiais e técnicas
+
+Use fontes oficiais para validar regras do Pix. Esta documentação explica arquitetura de referência, mas normas, manuais, prazos e requisitos devem ser conferidos no material vigente do Banco Central e nos contratos dos participantes ou provedores envolvidos.
 
 ## Banco Central do Brasil
 
@@ -9,6 +11,8 @@
 - [Guia de implementação dos procedimentos de devolução no Pix](https://www.bcb.gov.br/content/estabilidadefinanceira/pix/Guia_MED.pdf)
 - [Manual de Segurança do Pix](https://www.bcb.gov.br/content/estabilidadefinanceira/cedsfn/Manual_de_Seguranca_PIX.pdf)
 - [Manual de Tempos do Pix](https://www.bcb.gov.br/content/estabilidadefinanceira/pix/Regulamento_Pix/IX_ManualdeTemposdoPix.pdf)
+- [Regulamento do Pix](https://www.bcb.gov.br/estabilidadefinanceira/pix)
+- [FAQ Pix para cidadãos](https://www.bcb.gov.br/meubc/faqs/s/pix)
 
 ## Kubernetes e service mesh
 
@@ -34,6 +38,14 @@
 - [Azure Architecture Center — Ambassador](https://learn.microsoft.com/en-us/azure/architecture/patterns/ambassador)
 - [Azure Architecture Center — Sidecar](https://learn.microsoft.com/en-us/azure/architecture/patterns/sidecar)
 
+## Como manter as referências
+
+- revisar links oficiais sempre que houver mudança regulatória;
+- registrar data de consulta em materiais de treinamento formal;
+- preferir fonte primária quando houver divergência entre blog, notícia e regulamento;
+- separar requisito regulatório de recomendação arquitetural interna;
+- manter ADRs para decisões locais que não vêm de norma.
+
 ---
 
-← [18. Checklist técnico](18-checklist-tecnico.md) · [Início](../README.md) · [Sumário](../SUMMARY.md)
+← [18. Checklist técnico](18-checklist-tecnico.md) · [Início](../README.md) · [Sumário](../SUMMARY.md) · [20. Glossário e perguntas de revisão](20-glossario-e-perguntas-de-revisao.md) →
